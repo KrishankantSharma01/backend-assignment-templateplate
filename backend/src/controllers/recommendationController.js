@@ -1,5 +1,5 @@
-﻿const asyncHandler = require("../utils/asyncHandler");
-const { buildProgramRecommendations } = require("../services/recommendationService");
+﻿import asyncHandler from '../utils/asyncHandler.js';
+import { buildProgramRecommendations  } from '../services/recommendationService.js';
 
 const getRecommendations = asyncHandler(async (req, res) => {
   const { studentId } = req.params;
@@ -11,6 +11,5 @@ const getRecommendations = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = {
-  getRecommendations,
-};
+export { getRecommendations,
+ };

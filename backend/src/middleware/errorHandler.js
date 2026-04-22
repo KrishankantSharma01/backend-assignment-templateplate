@@ -8,4 +8,4 @@
   });
 }
 
-module.exports = errorHandler;
+export default errorHandler;

@@ -1,10 +1,9 @@
-﻿const express = require("express");
+﻿import express from 'express';
 
-const {
-  createApplication,
+import { createApplication,
   listApplications,
   updateApplicationStatus,
-} = require("../controllers/applicationController");
+ } from '../controllers/applicationController.js';
 
 const router = express.Router();
 
@@ -12,4 +11,4 @@ router.get("/", listApplications);
 router.post("/", createApplication);
 router.patch("/:id/status", updateApplicationStatus);
 
-module.exports = router;
+export default router;

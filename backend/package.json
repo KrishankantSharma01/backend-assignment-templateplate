@@ -1,24 +1,31 @@
-﻿{
+{
   "name": "waygood-backend",
   "version": "1.0.0",
   "private": true,
   "description": "Backend starter for the Waygood candidate evaluation project.",
-  "main": "src/server.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "seed": "node src/scripts/seed.js"
+    "seed": "node src/scripts/seed.js",
+    "test": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "dependencies": {
+    "@google/genai": "^1.50.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "jsonwebtoken": "^9.0.2",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.5.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "redis": "^5.12.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.4"
+    "cross-env": "^10.1.0",
+    "jest": "^30.3.0",
+    "mongodb-memory-server": "^11.0.1",
+    "nodemon": "^3.1.4",
+    "supertest": "^7.2.2"
   }
 }

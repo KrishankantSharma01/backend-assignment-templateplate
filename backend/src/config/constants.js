@@ -18,7 +18,6 @@ const validStatusTransitions = {
   rejected: [],
 };
 
-module.exports = {
-  applicationStatuses,
+export { applicationStatuses,
   validStatusTransitions,
-};
+ };

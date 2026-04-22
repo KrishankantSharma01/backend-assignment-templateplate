@@ -1,16 +1,17 @@
-﻿const cors = require("cors");
-const express = require("express");
-const morgan = require("morgan");
+import cors from 'cors';
+import express from 'express';
+import morgan from 'morgan';
 
-const applicationRoutes = require("./routes/applicationRoutes");
-const authRoutes = require("./routes/authRoutes");
-const dashboardRoutes = require("./routes/dashboardRoutes");
-const healthRoutes = require("./routes/healthRoutes");
-const programRoutes = require("./routes/programRoutes");
-const recommendationRoutes = require("./routes/recommendationRoutes");
-const universityRoutes = require("./routes/universityRoutes");
-const errorHandler = require("./middleware/errorHandler");
-const notFound = require("./middleware/notFound");
+import aiRoutes from './routes/aiRoutes.js';
+import applicationRoutes from './routes/applicationRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
+import healthRoutes from './routes/healthRoutes.js';
+import programRoutes from './routes/programRoutes.js';
+import recommendationRoutes from './routes/recommendationRoutes.js';
+import universityRoutes from './routes/universityRoutes.js';
+import errorHandler from './middleware/errorHandler.js';
+import notFound from './middleware/notFound.js';
 
 const app = express();
 
@@ -25,8 +26,9 @@ app.use("/api/programs", programRoutes);
 app.use("/api/recommendations", recommendationRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/ai", aiRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
 
-module.exports = app;
+export default app;

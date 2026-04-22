@@ -1,5 +1,5 @@
-﻿const Program = require("../models/Program");
-const asyncHandler = require("../utils/asyncHandler");
+﻿import Program from '../models/Program.js';
+import asyncHandler from '../utils/asyncHandler.js';
 
 function parseBoolean(value) {
   if (value === "true") return true;
@@ -86,6 +86,5 @@ const listPrograms = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = {
-  listPrograms,
-};
+export { listPrograms,
+ };

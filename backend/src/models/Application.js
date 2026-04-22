@@ -1,6 +1,6 @@
-﻿const mongoose = require("mongoose");
+﻿import mongoose from 'mongoose';
 
-const { applicationStatuses } = require("../config/constants");
+import { applicationStatuses  } from '../config/constants.js';
 
 const applicationTimelineSchema = new mongoose.Schema(
   {
@@ -67,4 +67,4 @@ const applicationSchema = new mongoose.Schema(
 
 applicationSchema.index({ student: 1, program: 1, intake: 1 }, { unique: true });
 
-module.exports = mongoose.model("Application", applicationSchema);
+export default mongoose.model("Application", applicationSchema);

@@ -258,9 +258,8 @@ const applications = [
   },
 ];
 
-module.exports = {
-  applications,
+export { applications,
   programs,
   students,
   universities,
-};
+ };

@@ -1,4 +1,4 @@
-﻿const mongoose = require("mongoose");
+﻿import mongoose from 'mongoose';
 
 const universitySchema = new mongoose.Schema(
   {
@@ -41,4 +41,4 @@ const universitySchema = new mongoose.Schema(
 
 universitySchema.index({ name: "text", country: "text", city: "text" });
 
-module.exports = mongoose.model("University", universitySchema);
+export default mongoose.model("University", universitySchema);

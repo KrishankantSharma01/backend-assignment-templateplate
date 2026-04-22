@@ -1,13 +1,12 @@
-﻿const express = require("express");
+﻿import express from 'express';
 
-const {
-  listPopularUniversities,
+import { listPopularUniversities,
   listUniversities,
-} = require("../controllers/universityController");
+ } from '../controllers/universityController.js';
 
 const router = express.Router();
 
 router.get("/", listUniversities);
 router.get("/popular", listPopularUniversities);
 
-module.exports = router;
+export default router;

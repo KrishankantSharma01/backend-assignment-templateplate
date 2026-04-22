@@ -1,9 +1,9 @@
-﻿const express = require("express");
+﻿import express from 'express';
 
-const { getOverview } = require("../controllers/dashboardController");
+import { getOverview  } from '../controllers/dashboardController.js';
 
 const router = express.Router();
 
 router.get("/overview", getOverview);
 
-module.exports = router;
+export default router;

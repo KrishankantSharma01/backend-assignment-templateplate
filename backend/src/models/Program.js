@@ -1,4 +1,4 @@
-﻿const mongoose = require("mongoose");
+﻿import mongoose from 'mongoose';
 
 const programSchema = new mongoose.Schema(
   {
@@ -72,4 +72,4 @@ programSchema.index({
   tuitionFeeUsd: 1,
 });
 
-module.exports = mongoose.model("Program", programSchema);
+export default mongoose.model("Program", programSchema);

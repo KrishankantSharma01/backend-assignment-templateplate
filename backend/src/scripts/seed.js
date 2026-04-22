@@ -1,9 +1,9 @@
-﻿const connectDatabase = require("../config/database");
-const Application = require("../models/Application");
-const Program = require("../models/Program");
-const Student = require("../models/Student");
-const University = require("../models/University");
-const seedData = require("../data/seedData");
+import connectDatabase from '../config/database.js';
+import Application from '../models/Application.js';
+import Program from '../models/Program.js';
+import Student from '../models/Student.js';
+import University from '../models/University.js';
+import * as seedData from '../data/seedData.js';
 
 async function seed() {
   await connectDatabase();

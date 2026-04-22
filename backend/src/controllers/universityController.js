@@ -1,6 +1,6 @@
-﻿const University = require("../models/University");
-const cacheService = require("../services/cacheService");
-const asyncHandler = require("../utils/asyncHandler");
+import University from '../models/University.js';
+import cacheService from '../services/cacheService.js';
+import asyncHandler from '../utils/asyncHandler.js';
 
 function parseBoolean(value) {
   if (value === "true") return true;
@@ -75,7 +75,7 @@ const listUniversities = asyncHandler(async (req, res) => {
 
 const listPopularUniversities = asyncHandler(async (req, res) => {
   const cacheKey = "popular-universities";
-  const cachedPayload = cacheService.get(cacheKey);
+  const cachedPayload = await cacheService.get(cacheKey);
 
   if (cachedPayload) {
     return res.json({
@@ -92,7 +92,7 @@ const listPopularUniversities = asyncHandler(async (req, res) => {
     .limit(6)
     .lean();
 
-  cacheService.set(cacheKey, universities);
+  await cacheService.set(cacheKey, universities);
 
   res.json({
     success: true,
@@ -103,7 +103,6 @@ const listPopularUniversities = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = {
-  listPopularUniversities,
+export { listPopularUniversities,
   listUniversities,
-};
+ };

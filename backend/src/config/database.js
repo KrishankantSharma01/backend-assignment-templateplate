@@ -1,6 +1,6 @@
-﻿const mongoose = require("mongoose");
+﻿import mongoose from 'mongoose';
 
-const env = require("./env");
+import env from './env.js';
 
 async function connectDatabase() {
   mongoose.set("strictQuery", true);
@@ -8,4 +8,4 @@ async function connectDatabase() {
   console.log("Connected to MongoDB");
 }
 
-module.exports = connectDatabase;
+export default connectDatabase;

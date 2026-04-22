@@ -1,4 +1,4 @@
-﻿const asyncHandler = require("../utils/asyncHandler");
+﻿import asyncHandler from '../utils/asyncHandler.js';
 
 const getHealth = asyncHandler(async (req, res) => {
   res.json({
@@ -11,6 +11,5 @@ const getHealth = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = {
-  getHealth,
-};
+export { getHealth,
+ };

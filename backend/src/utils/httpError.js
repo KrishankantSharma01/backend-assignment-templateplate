@@ -7,4 +7,4 @@
   }
 }
 
-module.exports = HttpError;
+export default HttpError;

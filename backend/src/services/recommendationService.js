@@ -1,45 +1,6 @@
-﻿const Program = require("../models/Program");
-const Student = require("../models/Student");
-const HttpError = require("../utils/httpError");
-
-function calculateScore(student, program) {
-  let score = 0;
-  const reasons = [];
-
-  if (student.targetCountries.includes(program.country)) {
-    score += 35;
-    reasons.push(`Preferred country match: ${program.country}`);
-  }
-
-  if (
-    student.interestedFields.some((field) =>
-      program.field.toLowerCase().includes(field.toLowerCase())
-    )
-  ) {
-    score += 30;
-    reasons.push(`Field alignment: ${program.field}`);
-  }
-
-  if (student.maxBudgetUsd >= program.tuitionFeeUsd) {
-    score += 20;
-    reasons.push("Within budget range");
-  }
-
-  if (student.preferredIntake && program.intakes.includes(student.preferredIntake)) {
-    score += 10;
-    reasons.push(`Preferred intake available: ${student.preferredIntake}`);
-  }
-
-  if ((student.englishTest?.score || 0) >= program.minimumIelts) {
-    score += 5;
-    reasons.push("English test score meets requirement");
-  }
-
-  return {
-    score,
-    reasons,
-  };
-}
+import Program from '../models/Program.js';
+import Student from '../models/Student.js';
+import HttpError from '../utils/httpError.js';
 
 async function buildProgramRecommendations(studentId) {
   const student = await Student.findById(studentId).lean();
@@ -48,23 +9,63 @@ async function buildProgramRecommendations(studentId) {
     throw new HttpError(404, "Student not found.");
   }
 
-  const candidatePrograms = await Program.find({
-    country: { $in: student.targetCountries },
-  })
-    .limit(25)
-    .lean();
+  // Pre-process interested fields for regex matching in aggregation
+  const fieldRegexArray = (student.interestedFields || []).map(field => ({
+    $regexMatch: { input: "$field", regex: field, options: "i" }
+  }));
 
-  const recommendations = candidatePrograms
-    .map((program) => {
-      const { score, reasons } = calculateScore(student, program);
-      return {
-        ...program,
-        matchScore: score,
-        reasons,
-      };
-    })
-    .sort((left, right) => right.matchScore - left.matchScore)
-    .slice(0, 5);
+  const recommendations = await Program.aggregate([
+    {
+      $addFields: {
+        countryMatch: { $in: ["$country", student.targetCountries || []] },
+        fieldMatch: fieldRegexArray.length > 0 ? { $anyElementTrue: [fieldRegexArray] } : false,
+        budgetMatch: { $lte: ["$tuitionFeeUsd", student.maxBudgetUsd || Infinity] },
+        intakeMatch: { $in: [student.preferredIntake || "", "$intakes"] },
+        ieltsMatch: { $lte: ["$minimumIelts", student.englishTest?.score || 0] }
+      }
+    },
+    {
+      $addFields: {
+        matchScore: {
+          $sum: [
+            { $cond: ["$countryMatch", 35, 0] },
+            { $cond: ["$fieldMatch", 30, 0] },
+            { $cond: ["$budgetMatch", 20, 0] },
+            { $cond: ["$intakeMatch", 10, 0] },
+            { $cond: ["$ieltsMatch", 5, 0] }
+          ]
+        },
+        reasons: {
+          $filter: {
+            input: [
+              { $cond: ["$countryMatch", { $concat: ["Preferred country match: ", "$country"] }, null] },
+              { $cond: ["$fieldMatch", { $concat: ["Field alignment: ", "$field"] }, null] },
+              { $cond: ["$budgetMatch", "Within budget range", null] },
+              { $cond: ["$intakeMatch", { $concat: ["Preferred intake available: ", student.preferredIntake || ""] }, null] },
+              { $cond: ["$ieltsMatch", "English test score meets requirement", null] }
+            ],
+            as: "reason",
+            cond: { $ne: ["$$reason", null] }
+          }
+        }
+      }
+    },
+    {
+      $sort: { matchScore: -1 }
+    },
+    {
+      $limit: 5
+    },
+    {
+      $project: {
+        countryMatch: 0,
+        fieldMatch: 0,
+        budgetMatch: 0,
+        intakeMatch: 0,
+        ieltsMatch: 0
+      }
+    }
+  ]);
 
   return {
     data: {
@@ -77,12 +78,10 @@ async function buildProgramRecommendations(studentId) {
       recommendations,
     },
     meta: {
-      implementationStatus:
-        "starter-scoring-in-javascript-replace-with-mongodb-aggregation",
+      implementationStatus: "completed-using-mongodb-aggregation",
     },
   };
 }
 
-module.exports = {
-  buildProgramRecommendations,
-};
+export { buildProgramRecommendations,
+ };

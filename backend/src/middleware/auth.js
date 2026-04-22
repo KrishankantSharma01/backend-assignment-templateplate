@@ -1,9 +1,9 @@
-﻿const jwt = require("jsonwebtoken");
+import jwt from 'jsonwebtoken';
 
-const env = require("../config/env");
-const Student = require("../models/Student");
-const asyncHandler = require("../utils/asyncHandler");
-const HttpError = require("../utils/httpError");
+import env from '../config/env.js';
+import Student from '../models/Student.js';
+import asyncHandler from '../utils/asyncHandler.js';
+import HttpError from '../utils/httpError.js';
 
 const requireAuth = asyncHandler(async (req, res, next) => {
   const authorizationHeader = req.headers.authorization;
@@ -29,6 +29,18 @@ const requireAuth = asyncHandler(async (req, res, next) => {
   }
 });
 
-module.exports = {
-  requireAuth,
+const authorize = (...roles) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      throw new HttpError(401, "User not authenticated.");
+    }
+    if (!roles.includes(req.user.role)) {
+      throw new HttpError(403, "Forbidden: Insufficient permissions.");
+    }
+    next();
+  };
 };
+
+export { requireAuth,
+  authorize,
+ };

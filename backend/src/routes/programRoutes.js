@@ -1,9 +1,9 @@
-﻿const express = require("express");
+﻿import express from 'express';
 
-const { listPrograms } = require("../controllers/programController");
+import { listPrograms  } from '../controllers/programController.js';
 
 const router = express.Router();
 
 router.get("/", listPrograms);
 
-module.exports = router;
+export default router;
